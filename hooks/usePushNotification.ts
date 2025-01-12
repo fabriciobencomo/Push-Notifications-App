@@ -3,6 +3,8 @@ import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { routeToScreen } from 'expo-router/build/useScreens';
+import { router } from 'expo-router';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -116,7 +118,11 @@ export const usePushNotifications = () => {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
+      const { chatID } = response.notification.request.content.data;
+
+      if (chatID){
+        router.push(`/chat/${chatID}`);
+      }
     });
 
     return () => {
